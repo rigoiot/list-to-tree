@@ -13,6 +13,10 @@ LTT = (function() {
 
     LTT.prototype.key_child = 'child';
 
+    LTT.prototype.GetParent = function(item) {
+      return item[this.key_parent];
+    };
+    
     LTT.prototype.options = {};
 
     function LTT(list, options) {
@@ -20,7 +24,10 @@ LTT = (function() {
         this.options = options != null ? options : {};
         this.ParseOptions();
         this.list = _.map(_.sortByOrder(this.list, [this.key_parent, this.key_id], ['asc', 'asc']));
-        this.groupParent = _.uniq(_.pluck(this.list, this.key_parent));
+        var GetParent = this.GetParent;
+        this.groupParent = _.uniq(this.list, function(item) {
+          return GetParent(item);
+        });
         return this;
     }
 
@@ -34,6 +41,9 @@ LTT = (function() {
         if (this.options.key_child != null) {
             this.key_child = this.options.key_child;
         }
+        if (this.options.GetParent) {
+            this.GetParent = this.options.GetParent;
+        }
     };
 
     LTT.prototype.GetParentItems = function(parent) {
@@ -42,7 +52,7 @@ LTT = (function() {
         _ref = this.list;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             item = _ref[_i];
-            if (item[this.key_parent] === parent) {
+            if (this.GetParent(item) === parent) {
                 result.push(item);
             }
         }
@@ -66,7 +76,7 @@ LTT = (function() {
         result = [];
         _ref = this.groupParent;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            parentId = _ref[_i];
+            parentId = this.GetParent(_ref[_i]);
             obj = this.GetItemById(parentId);
             child = this.GetParentItems(parentId);
             if (obj === false) {
