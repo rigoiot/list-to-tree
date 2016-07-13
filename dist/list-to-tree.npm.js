@@ -14,7 +14,7 @@ LTT = (function() {
 
     LTT.prototype.key_child = 'child';
 
-    LTT.prototype.GetParent = function(item) {
+    LTT.prototype.getParent = function(item) {
       return item[this.key_parent];
     };
 
@@ -25,9 +25,9 @@ LTT = (function() {
         this.options = options != null ? options : {};
         this.ParseOptions();
         this.list = _.map(_.sortByOrder(this.list, [this.key_parent, this.key_id], ['asc', 'asc']));
-        var GetParent = this.GetParent;
+        var getParent = this.getParent;
         this.groupParent = _.uniq(this.list, function(item) {
-          return GetParent(item);
+          return getParent(item, {parentKey: this.key_parent, idKey: this.key_id});
         });
         return this;
     }
@@ -42,8 +42,8 @@ LTT = (function() {
         if (this.options.key_child != null) {
             this.key_child = this.options.key_child;
         }
-        if (this.options.GetParent) {
-            this.GetParent = this.options.GetParent;
+        if (this.options.getParent) {
+            this.getParent = this.options.getParent;
         }
     };
 
@@ -53,7 +53,7 @@ LTT = (function() {
         _ref = this.list;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             item = _ref[_i];
-            if (this.GetParent(item) === parent) {
+            if (this.getParent(item, {parentKey: this.key_parent, idKey: this.key_id}) === parent) {
                 result.push(item);
             }
         }
@@ -77,7 +77,7 @@ LTT = (function() {
         result = [];
         _ref = this.groupParent;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            parentId = this.GetParent(_ref[_i]);
+            parentId = this.getParent(_ref[_i], {parentKey: this.key_parent, idKey: this.key_id});
             obj = this.GetItemById(parentId);
             child = this.GetParentItems(parentId);
             if (obj === false) {
