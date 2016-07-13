@@ -26,8 +26,10 @@ LTT = (function() {
         this.ParseOptions();
         this.list = _.map(_.sortByOrder(this.list, [this.key_parent, this.key_id], ['asc', 'asc']));
         var getParent = this.getParent;
+        var parentKey = this.key_parent;
+        var idKey = this.key_id;
         this.groupParent = _.uniq(this.list, function(item) {
-          return getParent(item, {parentKey: this.key_parent, idKey: this.key_id});
+          return getParent(item, {parentKey, idKey});
         });
         return this;
     }
