@@ -14,6 +14,10 @@ LTT = (function() {
 
     LTT.prototype.key_child = 'child';
 
+    LTT.prototype.sort = ['parent', 'id'];
+
+    LTT.prototype.order = ['asc', 'asc'];
+    
     LTT.prototype.getParent = function(item) {
       return item[this.key_parent];
     };
@@ -24,7 +28,7 @@ LTT = (function() {
         this.list = list;
         this.options = options != null ? options : {};
         this.ParseOptions();
-        this.list = _.map(_.sortByOrder(this.list, [this.key_parent, this.key_id], ['asc', 'asc']));
+        this.list = _.map(_.sortByOrder(this.list, this.sort, this.order));
         var getParent = this.getParent;
         var parentKey = this.key_parent;
         var idKey = this.key_id;
@@ -46,6 +50,12 @@ LTT = (function() {
         }
         if (this.options.getParent) {
             this.getParent = this.options.getParent;
+        }
+        if (this.options.sort) {
+            this.sort = this.options.sort;
+        }
+        if (this.options.order) {
+            this.order = this.options.order;
         }
     };
 
