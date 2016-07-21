@@ -33,7 +33,7 @@ LTT = (function() {
         var parentKey = this.key_parent;
         var idKey = this.key_id;
         this.groupParent = _.uniq(this.list, function(item) {
-          return getParent(item, {parentKey, idKey});
+          return getParent(item, {parentKey: parentKey, idKey: idKey});
         });
         return this;
     }
